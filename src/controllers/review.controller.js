@@ -13,12 +13,19 @@ export async function createReview(req, res) {
     const { invoiceId, department } = decodeReviewToken(reviewToken);
 
     // Kiểm tra review đã tồn tại
-    const existingReview = await EmployeeReview.findOne({
+    const existingReview = await EmployeeReview.findAll({
       where: { InvoiceID: invoiceId },
     });
 
-    if (existingReview) {
+    if (existingReview.length >= 2) {
       return res.status(400).json({ message: "Hóa đơn đã được đánh giá" });
+    }
+
+    // Nếu nhân viên này đã được đánh giá trong hóa đơn -> chặn
+    if (existingReview.some((r) => r.EmployeeID === employeeId)) {
+      return res
+        .status(400)
+        .json({ message: "Nhân viên này đã được đánh giá cho hóa đơn này" });
     }
 
     const employee = await Employee.findOne({
@@ -88,16 +95,16 @@ export async function checkReviewToken(req, res) {
     const { employeeId, invoiceId, department } = decoded;
     console.log(invoiceId);
 
-    const existingReview = await EmployeeReview.findOne({
+    const existingReview = await EmployeeReview.findAll({
       where: { InvoiceID: invoiceId }, // ✅ phải dùng `where`
     });
 
-    console.log("hihi", existingReview);
     res.status(200).json({
-      hasReviewed: !!existingReview,
+      hasReviewed: existingReview.length >= 2,
       employeeId,
       invoiceId,
       department,
+      employeeIdsReviewed: existingReview.map((r) => r.EmployeeID),
     });
   } catch (err) {
     console.error("❌ Error checking review token:", err);
