@@ -1,0 +1,10 @@
+CREATE TABLE EmployeeReviews (
+    Id INT IDENTITY(1,1) PRIMARY KEY, 
+    InvoiceID NVARCHAR(255) NOT NULL,
+    EmployeeID NVARCHAR(255) NOT NULL,
+    EmployeeName NVARCHAR(255) NOT NULL,
+    Department NVaRCHAR(255) NOT NULL,
+    Rating INT NOT NULL,
+    Feedback NVARCHAR(MAX) NULL,
+    CreatedAt DATETIME DEFAULT GETDATE()
+);

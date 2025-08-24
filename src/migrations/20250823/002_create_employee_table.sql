@@ -1,0 +1,24 @@
+CREATE TABLE Employees (
+    EmpID VARCHAR(20) PRIMARY KEY,
+    EmpCode NVARCHAR(50) NOT NULL,
+    EmpName NVARCHAR(100) NOT NULL,
+    Active INT NOT NULL
+);
+GO 
+
+INSERT INTO Employees (EmpID, EmpCode, EmpName, Active) VALUES
+('EMP220200000002', 'NV1', N'Mía', 1),
+('EMP220200000003', 'NV2', N'Trâm', 1),
+('EMP220200000004', 'NV3', N'Ngọc', 1),
+('EMP220300000001', '0', N'Admin', 1),
+('EMP220300000002', 'NV4', N'ONLINE', 1),
+('EMP220900000001', 'NV6', N'Màu', 1),
+('EMP220900000002', 'NV7', N'KĐ_Đồ Cũ', 1),
+('EMP220900000003', 'NV8', N'Vú_NC', 1),
+('EMP220900000008', 'MM', N'Chị Mum', 1),
+('EMP230600000001', 'GKD', N'Nhung', 1),
+('EMP230600000002', 'nv9', N'Mẫu', 1),
+('EMP231200000001', 'NV 10', N'Linh', 1),
+('EMP240600000001', 'QY', N'Ngân Onl', 1),
+('EMP241200000001', 'P8', N'Hằng', 1),
+('EMP241200000002', 'JH', N'Mai Liên', 1);
