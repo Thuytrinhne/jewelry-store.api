@@ -77,11 +77,36 @@ export async function checkReview(req, res) {
 
 const SECRET_KEY = process.env.REVIEW_SECRET;
 
-// Tạo token (ví dụ khi gửi link đánh giá)
-export function generateReviewToken({ employeeId, invoiceId, department }) {
-  return jwt.sign({ employeeId, invoiceId, department }, SECRET_KEY, {
-    expiresIn: "1d",
-  });
+// POST /api/reviews/generate-review-token
+export async function generateReviewToken(req, res) {
+  const masterToken = req.headers.authorization?.split(" ")[1]; // "Bearer <token>"
+
+  // ✅ Kiểm tra master token
+  if (!masterToken || masterToken !== process.env.MASTER_TOKEN) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const { employeeId, invoiceId, department } = req.body;
+
+  if (!employeeId || !invoiceId || !department) {
+    return res.status(400).json({ message: "Thiếu dữ liệu cần thiết" });
+  }
+
+  try {
+    const token = jwt.sign(
+      { employeeId, invoiceId, department },
+      SECRET_KEY,
+      { expiresIn: "30d" } // Token sống 30 ngày
+    );
+
+    return res.status(200).json({
+      success: true,
+      token,
+    });
+  } catch (err) {
+    console.error("❌ Error generating token:", err);
+    return res.status(500).json({ message: "Lỗi server" });
+  }
 }
 
 // POST /api/reviews/check-token
