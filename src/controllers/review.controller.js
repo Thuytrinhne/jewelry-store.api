@@ -5,12 +5,14 @@ import jwt from "jsonwebtoken";
 
 // POST /api/reviews
 export async function createReview(req, res) {
-  const { reviewToken, rating, feedback, employeeId } = req.body;
+  const { reviewToken, rating, feedback, employeeId, departmentFromBody } =
+    req.body;
+
   if (!reviewToken)
     return res.status(400).json({ message: "Thiếu reviewToken" });
 
   try {
-    const { invoiceId, department } = decodeReviewToken(reviewToken);
+    const { invoiceId } = decodeReviewToken(reviewToken);
 
     // Kiểm tra review đã tồn tại
     const existingReview = await EmployeeReview.findAll({
@@ -38,7 +40,7 @@ export async function createReview(req, res) {
     const review = await EmployeeReview.create({
       EmployeeID: employeeId,
       InvoiceID: invoiceId,
-      Department: department,
+      Department: departmentFromBody,
       Rating: rating,
       Feedback: feedback,
       EmployeeName: employee.EmpName,
